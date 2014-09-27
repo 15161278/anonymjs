@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="content-language" content="en-us"/>
+        <meta charset="UTF-8">
+        <title>Synnexjs element.js Test</title>
+        <!--[if lt IE 8.0]>
+        <script src="../lib/script/json2.js"></script><![endif]--><!--[if lt IE 9.0]>
+        <script src="../lib/script/html5shiv.js"></script><![endif]-->
+        <link href="../dest/css/core.css" rel="stylesheet"/>
+        <link href="css/test.css" rel="stylesheet"/>
+        <style>
+            .desc li {
+                float: left;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper" id="wrap">
+            <div class="elems">
+                <input type="text" name="text" id="text" class="input"/>
+            </div>
+            <table id="performanceGrid" class="grid">
+                <caption>element.js Performance Test</caption>
+                <colgroup>
+                    <col class="method"/>
+                    <col class="times"/>
+                    <col class="cost"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>iterating times</th>
+                        <th>Cost(ms)</th>
+                    </tr>
+                </thead>
+                <tbody id="performance"></tbody>
+            </table>
+            <table id="featureGrid" class="grid">
+                <caption>element.js Feature Test</caption>
+                <colgroup>
+                    <col class="method"/>
+                    <col class="result"/>
+                    <col class="cost"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Test</th>
+                        <th>Cost(ms)</th>
+                    </tr>
+                </thead>
+                <tbody id="feature"></tbody>
+            </table>
+        </div>
+        <script src="script/test.js"></script>
+        <script src="../lib/script/jquery.js"></script>
+        <script src="../dest/script/core.js"></script>
+        <script src="../dest/script/element.js"></script>
+        <script>
+            var _ = Anonymousjs, selector = '.wrapper >  div.elems   input[ name = "text" ]:nth-child( 2n - 1)';
+            var whitespace = '\\x20\\t\\r\\n\\f',
+                expr = {
+                    'ID': '#([\\S]+)',
+                    'Tag': '(\\w+)',
+                    'Name': '\\[[' + whitespace + ']*name[' + whitespace + ']*=[' + whitespace + ']*\\"([\\w-]+)\\"[' + whitespace + ']*\\]',
+                    'Class': '\\.([\\w-]+)',
+                    'Attribute': '\\[[' + whitespace + ']*[\\w-]+[' + whitespace + ']*(?:[\\*\\^\\$\\|\\!\\~]?=[' + whitespace + ']*\\"[\\S]+\\"[' + whitespace + ']*)*\\]',
+                    'Pseudo': '[\\:]{1,2}[a-z-]+(?:\\([' + whitespace + '\\w-]+\\))?',
+                    'Descendant': '[^\\s>+~][' + whitespace + ']+[^\\s>+~]',
+                    'Combinators': '[' + whitespace + ']*([>+~])[' + whitespace + ']'
+                },
+                exprGroup = {
+                    'Attribute': '\\[(?:[' + whitespace + ']*([\\w-]+)[' + whitespace + ']*(?:([*^$|!~]?=)[' + whitespace + ']*\\"([\\S]+)\\"[' + whitespace + ']*)*)\\]',
+                    'Pseudo': '(?:([\\:]{1,2})([a-z-]+)(?:\\(([' + whitespace + '\\w-]+)\\))?)'
+                },
+                commaExpr = '(?:[' + whitespace + ']*[,]+[' + whitespace + ']*)',
+                quickExpr = '(?:(' + expr['ID'] + '$)|(^' + expr['Element'] + '$)|(^' + expr['Name'] + '$)|(^' + expr['Class'] + '$))',
+                selectorQuery = ['ID', 'Tag', 'Name', 'Class', 'Attribute', 'Pseudo', 'Descendant', 'Combinators'],
+                selectorMatchExpr = (function () {
+                    var ret = [];
+                    selectorQuery.forEach(function (key) {
+                        ret.push('^(?:' + expr[key] + ')');
+                    });
+                    return new RegExp('(?:' + ret.join('|') + ')');
+                })();
+            var selectorMatch = function () {
+                var ret = {
+                    type: null,
+                    selector: null,
+                    name: null,
+                    contain: null,
+                    value: null
+                }, selector = arguments[0], macth, group;
+                if (typeof selector == 'string') {
+                    macth = selectorMatchExpr.exec(selector);
+                } else {
+                    return ret;
+                }
+                macth.forEach(function (value, idx) {
+                    if (idx > 0) {
+                        if (!!value) {
+                            ret.type = selectorQuery[idx - 1];
+                            if (ret.type == 'Attribute') {
+                                group = exprGroup.exec(value);
+                                ret.name = group[1];
+                                ret.contain = group[2];
+                                ret.value = group[3];
+                            } else if (ret.type == 'Pseudo') {
+                                group = exprGroup.exec(value);
+                                ret.name = group[1];
+                                ret.value = group[2];
+                            } else {
+                                ret.value = value
+                            }
+                        }
+                    } else {
+                        if (!!value) {
+                            ret.selector = value;
+                        }
+                    }
+                });
+                return ret;
+            };
+            var selectorMatchArray = function () {
+                var selector = arguments[0], ret = [], match;
+                while (typeof selector == 'string' && selector != '') {
+                    match = selectorMatch(selector);
+                    ret.push(match);
+                    selector = selector.substring(match.selector.length);
+                }
+                return ret;
+            };
+
+            selectorMatchArray(selector);
+        </script>
+    </body>
+</html>

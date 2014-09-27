@@ -1,0 +1,10 @@
+/node_modules
+
+/*.iml
+
+/.idea
+
+/docs/*
+/dest/css/*
+/dest/images/*
+/dest/script/*

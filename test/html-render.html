@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta http-equiv="content-language" content="en-us"/>
+        <meta charset="UTF-8">
+        <title>Html render Test</title>
+        <!--[if lt IE 8.0]>
+        <script src="../lib/script/json2.js"></script><![endif]-->
+        <!--[if lt IE 9.0]>
+        <script src="../lib/script/html5shiv.js"></script><![endif]-->
+        <link href="css/test.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div class="wrapper" id="wrap">
+            <table class="grid">
+                <caption>Performance Test: Html render with big data </caption>
+                <colgroup>
+                    <col class="method"/>
+                    <col class="times"/>
+                    <col class="cost"/>
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>iterating times</th>
+                        <th>Cost(ms)</th>
+                    </tr>
+                </thead>
+                <tbody id="performance">
+                </tbody>
+            </table>
+        </div>
+        <script src="script/test.js"></script>
+        <script src="../lib/script/jquery.js"></script>
+        <script src="../dest/script/core.js"></script>
+        <script>
+            Synnexjs.debug = true;
+            var logs = [], render = function (rows, cols) {
+                $('#wrap').append('<div class="showcase"><h3 class="showcase-title">Showcase of table with ' + [rows] + ' rows and ' + [cols] + '</h3><div class="showcase-content" id="showcase_' + rows + 'x' + cols + '"></div></div>');
+                var i, j, t = Date.now(), table = ['<table id="table_' + rows + 'x' + cols + '">'];
+                logs.push(loggerGroup('Test for big number DOM nodes render performance with <a href="#showcase_' + rows + 'x' + cols + '">' + [rows] + ' rows and ' + [cols] + ' columns table</a>'));
+                for (i = 0; i < rows; i++) {
+                    table.push('<tr>');
+                    for (j = 0; j < cols; j++) {
+                        table.push('<td><div class="text-ellipsis">' + i + '-' + j + '</div></td>');
+                    }
+                    table.push('</tr>');
+                }
+                table.push('</table>');
+                table = table.join('');
+                logs.push(logger('String concatenation of generate a table', rows * cols, thousands(Date.now() - t)));
+                t = Date.now();
+                document.getElementById('showcase_' + rows + 'x' + cols).innerHTML = table;
+                logs.push(logger('Write the table to the DOM (element.innerHTML)', 1, thousands(Date.now() - t)));
+                t = Date.now();
+                document.getElementById('table_' + rows + 'x' + cols).offsetWidth;
+                logs.push(logger('Render the table', 1, thousands(Date.now() - t)));
+            };
+            $(function () {
+                render(16, 16);
+                render(32, 32);
+                render(64, 64);
+                render(128, 128);
+                render(256, 256);
+                //IE will be crash when set 512 * 512 cell table
+                //render(512, 512);
+                $('#performance').html(logs.join(''));
+            });
+        </script>
+    </body>
+</html>

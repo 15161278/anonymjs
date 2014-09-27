@@ -1,0 +1,1 @@
+}(this, <%= pkg.name %>, <%= pkg.name %>.Element, function(){}));

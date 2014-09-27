@@ -1,0 +1,25 @@
+{
+    "name": "Anonymousjs",
+    "title": "Anonymousjs Javascript Framework",
+    "description": "Anonymousjs Javascript Framework",
+    "version": "0.1.0",
+    "homepage": "https://github.com/15161278/anonymousjs",
+    "dependencies": {
+        "grunt": "latest",
+        "grunt-compare-size": "latest",
+        "grunt-spritesmith": "latest",
+        "grunt-contrib-clean": "latest",
+        "grunt-contrib-watch": "latest",
+        "grunt-contrib-copy": "latest",
+        "grunt-contrib-concat": "latest",
+        "grunt-contrib-jshint": "latest",
+        "grunt-contrib-uglify": "latest",
+        "grunt-contrib-less": "latest",
+        "grunt-contrib-sass": "latest",
+        "grunt-contrib-compass": "latest",
+        "grunt-contrib-cssmin": "latest",
+        "grunt-contrib-csslint": "latest",
+        "grunt-contrib-yuidoc": "latest",
+        "grunt-contrib-imagemin": "latest"
+    }
+}
