@@ -1,5 +1,5 @@
 var Selector, Element, prototype,
-// Regular expressions
+    // Regular expressions
     whitespace = '\\x20\\t\\r\\n\\f',
     regExp = {
         "ID": '#([\\S]+)',
@@ -13,7 +13,6 @@ var Selector, Element, prototype,
         'Comma': '(?:([' + whitespace + ']+)([,]+)([' + whitespace + ']+))',
         'Syntax': '(?:([\\:\\.#>\\+~]+)([\\s\\S]+)([^\\:\\.#>\\+~]))'
     };
-
 /**
  * <%= pkg.name %> Element
  * @class Element
@@ -25,6 +24,7 @@ _.Element = Element = function (selector, context) {
     return new Selector(selector, context);
 };
 Element.prototype = prototype = {
+    _elements: [],
     constructor: Element,
     selector: null,
     context: null

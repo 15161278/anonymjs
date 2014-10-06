@@ -80,11 +80,6 @@ Selector = function (selector, context) {
         }
         return accessArrayLike(self, ret);
     }
-    //TODO: css selector for ie6~7
-    alert('<%= pkg.name %> is not support IE7 and IE7 below browsers! Please update your browser to the latest IE!');
-    //format attribute selector fragment
-    query = selector.trim();
-    //query element from right
-    match = rightExpr.exec(query);
+
 };
 Selector.prototype = prototype;
